@@ -1,6 +1,6 @@
-# feathers-chat
+# feathers-tasks API
 
-> test-app
+> Tasks app
 
 ## About
 
@@ -12,7 +12,7 @@ This project uses [Feathers](http://feathersjs.com). An open source framework fo
 2. Install your dependencies
 
     ```
-    cd path/to/feathers-chat
+    cd path/to/fthrs
     npm install
     ```
 
@@ -22,6 +22,9 @@ This project uses [Feathers](http://feathersjs.com). An open source framework fo
     npm run compile # Compile TypeScript source
     npm run migrate # Run migrations to set up the database
     npm start
+    visit http://localhost:[PORT]/docs in browser to see Swagger UI
+    ```
+
     ```
 
 ## Testing

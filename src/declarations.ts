@@ -2,7 +2,6 @@ import { HookContext as FeathersHookContext, NextFunction } from '@feathersjs/fe
 import { Application as FeathersApplication } from '@feathersjs/koa';
 import { ApplicationConfiguration } from './configuration';
 import { TaskService } from './services/tasks/task.service';
-import {DbService} from "./services/db/db.service";
 
 export type { NextFunction };
 
@@ -14,7 +13,6 @@ export interface Configuration extends ApplicationConfiguration {}
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface ServiceTypes {
   tasks: TaskService;
-  db: DbService
 }
 
 // The application instance type that will be used everywhere else
