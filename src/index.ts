@@ -1,9 +1,6 @@
 import { app } from './app';
 import { logger } from './logger';
-import { appConfig } from "./config";
-
-//const port = app.get('port');
-//const host = app.get('host');
+import { appConfig } from './config';
 
 process.on('unhandledRejection', (reason) => logger.error('Unhandled Rejection %O', reason));
 

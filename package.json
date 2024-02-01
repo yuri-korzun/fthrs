@@ -2,7 +2,6 @@
   "name": "fthrs",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
   "scripts": {
     "dev": "nodemon -x ts-node src/index.ts",
     "compile": "shx rm -rf lib/ && tsc",
@@ -22,23 +21,15 @@
     "framework": "koa",
     "transports": [
       "rest"
-    ],
-    "schema": "typebox"
+    ]
   },
-  "directories": {
-    "lib": "src",
-    "test": "test"
-  },
-  "files": [
-    "lib/client.js",
-    "lib/**/*.d.ts",
-    "lib/**/*.shared.js"
-  ],
-  "main": "lib/client",
+  "main": "index.js",
   "dependencies": {
     "@feathersjs/adapter-commons": "^5.0.21",
     "@feathersjs/authentication": "^5.0.21",
     "@feathersjs/authentication-client": "^5.0.21",
+    "@feathersjs/authentication-local": "^5.0.21",
+    "@feathersjs/authentication-oauth": "^5.0.21",
     "@feathersjs/configuration": "^5.0.21",
     "@feathersjs/errors": "^5.0.21",
     "@feathersjs/feathers": "^5.0.21",
@@ -46,6 +37,7 @@
     "@feathersjs/schema": "^5.0.21",
     "@feathersjs/transport-commons": "^5.0.21",
     "@feathersjs/typebox": "^5.0.21",
+    "@koa/router": "^12.0.1",
     "dotenv": "^16.4.1",
     "feathers-hooks-common": "^8.1.2",
     "feathers-swagger": "^3.0.0",

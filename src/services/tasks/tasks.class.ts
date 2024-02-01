@@ -1,19 +1,19 @@
 import { Id, Params } from '@feathersjs/feathers';
-import { Application } from '../../declarations';
-import {Task, taskSchema} from "./task.schema";
-import {appConfig} from "../../config";
-import Nano, {DocumentScope} from "nano";
+import { Task } from './tasks.schema';
+import { appConfig } from '../../config';
+import Nano, { DocumentScope } from 'nano';
 
 const DEFAULT_PAGE_SIZE = 10;
-export class TaskService {
+export class TasksClass {
   docs: Record<string, any> = {};
   db: DocumentScope<Task>;
 
   constructor() {
-    // const {username, password} = appConfig.db;
-    const dbUrl = `http://admin:12345@127.0.0.1:5984`;
-    const dbConnector = Nano(dbUrl);
-    this.db = dbConnector.use('tasks');
+    const {username, password, dbUrl, dbName} = appConfig.db;
+    //const connectionString = `http://admin:12345@127.0.0.1:5984`;
+    const connectionString = `https://${username}:${password}@${dbUrl}`;
+    const dbConnector = Nano(connectionString);
+    this.db = dbConnector.use(dbName as string);
   }
 
   async get(id: Id) {
@@ -26,11 +26,10 @@ export class TaskService {
     const limit = params!.query!.$limit || DEFAULT_PAGE_SIZE;
     const skip = params!.query!.$skip || 0;
 
-    const res = await this.db.list({ include_docs: true, skip, limit });
+    const res = await this.db.find({ skip, limit, selector: { ...params.query, _id: { $gt: null } } });
 
     return {
-      data: res.rows.map((row) => row.doc),
-      total: res.total_rows,
+      data: res.docs,
       success: true
     };
   }
@@ -62,14 +61,3 @@ export class TaskService {
     };
   }
 }
-
-const taskService = new TaskService();
-
-taskService.docs = {
-  description: "A service to manage tasks",
-  schema: taskSchema,
-}
-
-export const task = (app: Application) => {
-  app.use('tasks', taskService);
-};

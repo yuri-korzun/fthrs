@@ -22,8 +22,24 @@ This project uses [Feathers](http://feathersjs.com). An open source framework fo
     npm run compile # Compile TypeScript source
     npm run migrate # Run migrations to set up the database
     npm start
-    visit http://localhost:[PORT]/docs in browser to see Swagger UI
     ```
+
+4. Visit Swagger page http://localhost:[PORT]/docs in browser
+
+   ```
+   In order to use tasks API you need to authenticate as admin user
+   admin user credentials: 
+    email: admin@example.com
+    password: 12345
+    strategy: local
+   
+   you can also authenticate as regular user
+    regular user credentials:
+    email: user@example.com
+    password: 12345
+    stragety: local
+   
+   !!!IMPORTANT!!! simple user doesn't have access to Tasks API endpoints
 
     ```
 

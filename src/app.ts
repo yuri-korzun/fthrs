@@ -4,6 +4,7 @@ import { koa, rest, bodyParser, errorHandler, parseAuthentication, cors, serveSt
 import { configurationValidator } from './configuration';
 import type { Application } from './declarations';
 import { logError } from './hooks/log-error';
+import { authentication } from './authentication';
 import { services } from './services';
 import swagger from 'feathers-swagger';
 
@@ -24,7 +25,16 @@ app.configure(
         title: 'Tasks API',
         description: 'API for managing tasks',
         version: '1.0.0'
-      }
+      },
+      components: {
+        securitySchemes: {
+          BearerAuth: {
+            type: 'http',
+            scheme: 'bearer'
+          }
+        }
+      },
+      security: [{ BearerAuth: [] }]
     },
     ui: swagger.swaggerUI({
       docsPath: '/docs'
@@ -40,6 +50,7 @@ app.use(bodyParser());
 
 // Configure services and transports
 app.configure(rest());
+app.configure(authentication);
 app.configure(services);
 
 // Register hooks that run on all service methods
