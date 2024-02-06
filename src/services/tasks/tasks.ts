@@ -1,18 +1,16 @@
 import { Application } from '../../declarations';
 import { createSwaggerServiceOptions } from 'feathers-swagger';
-import { taskQueryResolver, taskQuerySchema, tasksSchema } from './tasks.schema';
+import { taskQueryProperties, tasksSchema } from './tasks.schema';
 import { TasksClass } from './tasks.class';
 import { authenticate } from '@feathersjs/authentication';
-import { hooks as schemaHooks } from '@feathersjs/schema';
-import { HookContext, NextFunction } from '@feathersjs/feathers';
-import { Forbidden, NotFound } from "@feathersjs/errors";
+import { checkRole } from '../../hooks/role';
 
 export const tasksPath = 'tasks';
 
 export const task = (app: Application) => {
   const taskService = new TasksClass();
   taskService.docs = createSwaggerServiceOptions({
-    schemas: { taskSchema: tasksSchema, taskQuerySchema },
+    schemas: { taskSchema: tasksSchema, taskQuerySchema: taskQueryProperties },
     docs: {
       securities: ['find', 'get', 'create', 'update', 'remove']
     }
@@ -25,24 +23,7 @@ export const task = (app: Application) => {
       all: [authenticate('jwt')]
     },
     before: {
-      all: [
-        async (context: HookContext, next?: NextFunction) => {
-          const user = context.arguments[context.arguments.length - 1].user;
-
-          if (!user) {
-            throw new NotFound('User not found');
-          }
-
-          if (user.role !== 'admin') {
-            throw new Forbidden('Not allowed action');
-          }
-
-          if (next) {
-            await next();
-          }
-        },
-        schemaHooks.resolveQuery(taskQueryResolver)
-      ]
+      remove: [checkRole]
     },
     after: {
       all: []

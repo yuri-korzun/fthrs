@@ -1,5 +1,5 @@
 import { Id, Params } from '@feathersjs/feathers';
-import { Task } from './tasks.schema';
+import { Task, taskQueryBuilder } from './tasks.schema';
 import { appConfig } from '../../config';
 import Nano, { DocumentScope } from 'nano';
 
@@ -9,7 +9,7 @@ export class TasksClass {
   db: DocumentScope<Task>;
 
   constructor() {
-    const {username, password, dbUrl, dbName} = appConfig.db;
+    const { username, password, dbUrl, dbName } = appConfig.db;
     //const connectionString = `http://admin:12345@127.0.0.1:5984`;
     const connectionString = `https://${username}:${password}@${dbUrl}`;
     const dbConnector = Nano(connectionString);
@@ -17,16 +17,16 @@ export class TasksClass {
   }
 
   async get(id: Id) {
-    const res = await this.db.get(id.toString());
-
-    return res;
+    return this.db.get(id.toString());
   }
 
-  async find(params: Params & { fromMiddleware: string }) {
+  async find(params: Params) {
     const limit = params!.query!.$limit || DEFAULT_PAGE_SIZE;
     const skip = params!.query!.$skip || 0;
 
-    const res = await this.db.find({ skip, limit, selector: { ...params.query, _id: { $gt: null } } });
+    const selector = params.query ? taskQueryBuilder(params.query) : {};
+
+    const res = await this.db.find({ skip, limit, selector });
 
     return {
       data: res.docs,
@@ -34,7 +34,7 @@ export class TasksClass {
     };
   }
 
-  async create(data: any, params: Params & { fromMiddleware: string }) {
+  async create(data: any) {
     const res = await this.db.insert(data);
 
     return {
@@ -43,7 +43,7 @@ export class TasksClass {
     };
   }
 
-  async update(id: Id, data: any, params: Params & { fromMiddleware: string }) {
+  async update(id: Id, data: any) {
     const item = await this.db.head(id.toString());
     const res = await this.db.insert({ ...data, _rev: JSON.parse(item.etag) }, id.toString());
 
@@ -52,7 +52,7 @@ export class TasksClass {
     };
   }
 
-  async remove(id: Id, params: Params & { query: { rev: string } }) {
+  async remove(id: Id, params: Params) {
     const item = await this.db.head(id.toString());
     const res = await this.db.destroy(id.toString(), JSON.parse(item.etag));
 
