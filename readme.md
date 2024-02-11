@@ -39,7 +39,7 @@ This project uses [Feathers](http://feathersjs.com). An open source framework fo
     password: 12345
     stragety: local
    
-   !!!IMPORTANT!!! simple user doesn't have access to Tasks API endpoints
+   !!!IMPORTANT!!! simple user doesn't have access to delete tasks
 
     ```
 
